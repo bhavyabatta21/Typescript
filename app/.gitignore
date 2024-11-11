@@ -1,0 +1,17 @@
+# Ignore node_modules (contains all installed packages)
+node_modules/
+
+# Ignore the output directory (compiled JavaScript files)
+dist/
+
+# Ignore TypeScript cache and log files
+*.tsbuildinfo
+*.log
+
+# Ignore environment files (if you have any sensitive credentials)
+.env
+
+# Ignore OS or editor-specific files
+.DS_Store
+.vscode/
+.idea/
