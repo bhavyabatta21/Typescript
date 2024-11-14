@@ -1,16 +1,16 @@
-import axios from "axios";
+import { z } from "zod";
+import type { AxiosStatic } from "axios";
 import 'dotenv/config'
 
-export interface LocationInfo {
-  lat: string;
-  lon: string;
-  display_name: string;
-}
+const locationInfoSchema = z.object({
+  lat: z.string(),
+  lon: z.string(),
+  display_name: z.string(),
+});
 
-export async function fetchLocationData(
-  apiUrl: string,
-  location: string
-): Promise<LocationInfo> {
+export type LocationInfo = z.infer<typeof locationInfoSchema>;
+
+export async function fetchLocationData(axios: AxiosStatic, apiUrl: string, location: string): Promise<LocationInfo> {
   const options = {
     method: "GET",
     url: apiUrl,
@@ -20,14 +20,13 @@ export async function fetchLocationData(
     },
   };
 
-  // This won't always work. If the API updates, then this may result in a runtime error.
-  // Later we will use Zod to fix this.
-  const response = await axios.request<LocationInfo[]>(options);
+  const response = await axios.request(options);
 
   if (response.status === 200) {
-    if (response.data.length > 0) {
-      return response.data[0];
-    } else {
+    try {
+      return locationInfoSchema.parse(response.data[0]);
+    } catch (e) {
+      console.error(e);
       throw new Error(`Unable to find location information for ${location}`);
     }
   } else {
