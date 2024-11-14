@@ -1,5 +1,5 @@
 import { fetchLocationData } from "./location";
-import { fetchWeatherData } from "./weatherapi";
+import { fetchWeatherData } from "./api/weatherapi";
 import type { LocationInfo } from "./location";
 
 const WEATHER_API_URL = "https://api.open-meteo.com/v1/forecast";
