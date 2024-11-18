@@ -16,7 +16,7 @@ const GEOCODE_API_URL = "https://geocode.maps.co/search";
 const HTTP_CLIENT = axios;
 
 const environment = process.env.NODE_ENV;
-const templates = new nunjucks.Environment(new nunjucks.FileSystemLoader("src/backend/templates"));
+const templates = new nunjucks.Environment(new nunjucks.FileSystemLoader("/Users/bhavyabatta/Projects/Typescript/weather-app/src/backend/template/"));
 
 const server = fastify_fastify({
   logger: true,
@@ -68,17 +68,21 @@ const weatherCodeToImage = (code: number): string => {
 };
 
 const locationSchema = z.object({
-  location: z.string(),
+  location: z.string().optional(),
 });
 
 server.get("/", async (request, reply) => {
   const queryParams = request.query;
   try {
     const { location } = locationSchema.parse(queryParams);
+    if (!location) {
+        const rendered = templates.render("/Users/bhavyabatta/Projects/Typescript/weather-app/src/backend/template/get_started.njk", { environment });
+        return reply.header("Content-Type", "text/html; charset=utf-8").send(rendered);
+      }
     const locationInfo = await fetchLocationData(HTTP_CLIENT, GEOCODE_API_URL, location);
     const weatherInfo = await fetchWeatherData(HTTP_CLIENT, WEATHER_API_URL, locationInfo.lat, locationInfo.lon);
 
-    const rendered = templates.render("weather.njk", {
+    const rendered = templates.render("/Users/bhavyabatta/Projects/Typescript/weather-app/src/backend/template/weather.njk", {
       environment,
       location: locationInfo.display_name,
       currentDate: new Date().toDateString(),
@@ -95,7 +99,7 @@ server.get("/", async (request, reply) => {
       .send(rendered);
   } catch (e) {
     console.error(e);
-    const rendered = templates.render("get_started.njk", { environment, });
+    const rendered = templates.render("/Users/bhavyabatta/Projects/Typescript/weather-app/src/backend/template/get_started.njk", { environment, });
     await reply
       .header("Content-Type", "text/html; charset=utf-8")
       .send(rendered);
