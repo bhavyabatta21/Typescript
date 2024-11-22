@@ -24,6 +24,7 @@ A full-stack weather application built with **TypeScript**, **Fastify**, **Tailw
 ---
 
 ## **Project Structure**
+```plaintext
 weather-app/
 ├── dist/                   # Compiled static assets
 │   ├── static/
