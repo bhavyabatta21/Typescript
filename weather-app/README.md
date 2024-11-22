@@ -40,6 +40,7 @@ weather-app/
 ├── tailwind.config.js      # Tailwind CSS configuration
 ├── package.json            # NPM dependencies and scripts
 ├── README.md               # Project documentation
+```
 
 ## Setup Instructions
 1. Clone the repository:
